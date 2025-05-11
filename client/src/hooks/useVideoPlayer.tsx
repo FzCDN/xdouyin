@@ -3,7 +3,7 @@ import { useState, useRef, useCallback } from "react";
 export default function useVideoPlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false); // Changed from true to false to unmute videos by default
   const [progress, setProgress] = useState(0);
 
   const togglePlay = useCallback(() => {
