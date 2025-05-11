@@ -27,6 +27,29 @@ export default function VideoPlayer({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
+  // Tambahkan event listener untuk buffering state
+  useEffect(() => {
+    if (!videoRef.current) return;
+    
+    const videoElement = videoRef.current;
+    
+    const handleWaiting = () => {
+      setIsLoading(true);
+    };
+    
+    const handlePlaying = () => {
+      setIsLoading(false);
+    };
+    
+    videoElement.addEventListener('waiting', handleWaiting);
+    videoElement.addEventListener('playing', handlePlaying);
+    
+    return () => {
+      videoElement.removeEventListener('waiting', handleWaiting);
+      videoElement.removeEventListener('playing', handlePlaying);
+    };
+  }, [videoRef]);
+
   // Initialize video player and HLS if needed
   useEffect(() => {
     if (!videoRef.current) return;
@@ -142,8 +165,11 @@ export default function VideoPlayer({
   return (
     <>
       {isLoading && (
-        <div className="absolute inset-0 bg-black">
-          <Skeleton className="h-full w-full bg-gray-800/50" />
+        <div className="absolute inset-0 bg-black flex items-center justify-center">
+          <div className="flex flex-col items-center">
+            <div className="w-16 h-16 border-4 border-t-[#FE2C55] border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+            <p className="text-white mt-4">Loading video...</p>
+          </div>
         </div>
       )}
       <video
