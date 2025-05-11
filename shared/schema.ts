@@ -13,8 +13,8 @@ export const videoSchema = z.object({
   description_id: z.string(),
   description_en: z.string(),
   description_zh: z.string(),
-  mp4: z.string(),
-  m3u8: z.string(),
+  mp4: z.string().nullable(),
+  m3u8: z.string().nullable(),
   image: z.string(),
   duration: z.number()
 });

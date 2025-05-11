@@ -13,12 +13,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/videos", async (req, res) => {
     try {
       const response = await fetch("https://video.imgdesu.art/api/videos/random");
-      const data = await response.json();
+      const data: any = await response.json();
       
-      // Validate response against our schema
-      const validatedData = apiResponseSchema.parse(data);
-      
-      res.json(validatedData);
+      // Handle case where mp4 or m3u8 might be null in the API response
+      if (data && data.data && Array.isArray(data.data)) {
+        // We won't filter out videos with null mp4/m3u8 values, as our schema now accepts them
+        
+        // Validate the modified data against our schema
+        const validatedData = apiResponseSchema.parse(data);
+        res.json(validatedData);
+      } else {
+        throw new Error("Invalid data structure from API");
+      }
     } catch (error) {
       console.error("Error fetching videos:", error);
       

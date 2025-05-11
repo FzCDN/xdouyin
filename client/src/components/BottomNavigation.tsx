@@ -6,13 +6,13 @@ export default function BottomNavigation() {
   return (
     <div className="fixed bottom-0 left-0 right-0 flex justify-around items-center p-3 z-30 bg-gradient-to-t from-black/50 to-transparent">
       <Link href="/">
-        <a className="p-2 flex flex-col items-center">
+        <div className="p-2 flex flex-col items-center">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-home">
             <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
             <polyline points="9 22 9 12 15 12 15 22"/>
           </svg>
           <span className="text-xs mt-1">Home</span>
-        </a>
+        </div>
       </Link>
       <button className="p-2 flex flex-col items-center text-[#AAAAAA]">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-compass">

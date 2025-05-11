@@ -1,10 +1,10 @@
-import { useEffect, useRef, RefObject } from "react";
+import { useEffect, useRef, RefObject, useState } from "react";
 import Hls from "hls.js";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface VideoPlayerProps {
   videoRef: RefObject<HTMLVideoElement>;
-  videoSrc: string;
+  videoSrc: string | null;
   isHLS: boolean;
   posterSrc: string;
   isActive: boolean;
@@ -34,6 +34,13 @@ export default function VideoPlayer({
     const videoElement = videoRef.current;
     videoElement.muted = isMuted;
     
+    // If both mp4 and m3u8 are null, show error
+    if (!videoSrc) {
+      setHasError(true);
+      setIsLoading(false);
+      return;
+    }
+    
     // Setup HLS if needed and supported
     if (isHLS && videoSrc && Hls.isSupported()) {
       // Clean up previous HLS instance if it exists
@@ -47,7 +54,7 @@ export default function VideoPlayer({
         backBufferLength: 90
       });
       
-      hls.loadSource(videoSrc);
+      hls.loadSource(videoSrc as string);
       hls.attachMedia(videoElement);
       
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
@@ -82,7 +89,7 @@ export default function VideoPlayer({
       };
     } 
     // Use native support for HLS if browser supports it
-    else if (isHLS && videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+    else if (isHLS && videoSrc && videoElement.canPlayType('application/vnd.apple.mpegurl')) {
       videoElement.src = videoSrc;
       videoElement.addEventListener('loadedmetadata', () => {
         setIsLoading(false);
