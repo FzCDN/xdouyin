@@ -5,6 +5,7 @@ export default function useVideoPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false); // Changed from true to false to unmute videos by default
   const [progress, setProgress] = useState(0);
+  const [playbackRate, setPlaybackRate] = useState(1);
 
   const togglePlay = useCallback(() => {
     if (!videoRef.current) return;
@@ -30,6 +31,15 @@ export default function useVideoPlayer() {
     videoRef.current.muted = newMutedState;
     setIsMuted(newMutedState);
   }, [isMuted]);
+  
+  const setSpeed = useCallback((rate: number) => {
+    if (!videoRef.current) return;
+    
+    // Clamp rate between 0.5 and 3
+    const clampedRate = Math.max(0.5, Math.min(3, rate));
+    videoRef.current.playbackRate = clampedRate;
+    setPlaybackRate(clampedRate);
+  }, []);
 
   const handleTimeUpdate = useCallback(() => {
     if (!videoRef.current) return;
@@ -48,8 +58,10 @@ export default function useVideoPlayer() {
     isPlaying,
     isMuted,
     progress,
+    playbackRate,
     togglePlay,
     toggleMute,
+    setSpeed,
     handleTimeUpdate
   };
 }

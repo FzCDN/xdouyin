@@ -40,7 +40,6 @@ export default function VideoItem({ video, isActive, index }: VideoItemProps) {
     <div 
       ref={containerRef}
       className="video-item relative h-screen snap-start snap-always"
-      onTouchEnd={handleVideoClick}
       onClick={handleVideoClick}
     >
       {/* Progress bar */}
@@ -63,11 +62,12 @@ export default function VideoItem({ video, isActive, index }: VideoItemProps) {
         onVideoClick={togglePlay}
       />
       
-      {/* Video controls */}
+      {/* Video controls with video ref for fast forward feature */}
       <VideoControls 
         video={video}
         isLiked={isLiked}
         onLike={() => setIsLiked(!isLiked)}
+        videoRef={videoRef}
       />
     </div>
   );
