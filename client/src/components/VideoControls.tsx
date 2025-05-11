@@ -1,6 +1,5 @@
 import { Video } from "@shared/schema";
-import { useState, useEffect } from "react";
-import { Settings } from "lucide-react";
+import { useState } from "react";
 
 interface VideoControlsProps {
   video: Video;
@@ -9,23 +8,7 @@ interface VideoControlsProps {
 }
 
 export default function VideoControls({ video, isLiked, onLike }: VideoControlsProps) {
-  const [showQualityOptions, setShowQualityOptions] = useState(false);
   const [quality, setQuality] = useState<'HD' | 'LOW'>('HD');
-  
-  // Tutup menu kualitas ketika user click di luar
-  useEffect(() => {
-    const handleClickOutside = () => {
-      setShowQualityOptions(false);
-    };
-    
-    if (showQualityOptions) {
-      document.addEventListener('click', handleClickOutside);
-    }
-    
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, [showQualityOptions]);
   
   // Fungsi untuk memotong text jika terlalu panjang
   const truncateText = (text: string, maxLength: number) => {
@@ -41,51 +24,27 @@ export default function VideoControls({ video, isLiked, onLike }: VideoControlsP
   
   return (
     <div className="video-controls">
-      {/* Description overlay dengan posisi responsif */}
-      <div className="absolute bottom-[20%] left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-4 py-3 z-10">
+      {/* Description overlay dengan posisi responsif tanpa shadow */}
+      <div className="absolute bottom-[20%] left-0 right-0 px-4 py-3 z-10">
         <p className="text-sm sm:text-base font-roboto">
           {displayText}
         </p>
       </div>
       
-      {/* Quality switch button - posisi responsif */}
-      <div className="absolute top-4 right-4 z-20">
+      {/* Quality switch tanpa tombol, langsung pilihan */}
+      <div className="absolute top-4 right-4 z-20 flex space-x-2">
         <button 
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowQualityOptions(!showQualityOptions);
-          }}
-          className="bg-black/50 hover:bg-black/70 p-2 rounded-full transition-colors"
+          className={`px-3 py-1 rounded-full text-xs font-medium ${quality === 'HD' ? 'bg-[#FE2C55] text-white' : 'bg-black/50 text-white'}`}
+          onClick={() => setQuality('HD')}
         >
-          <Settings className="w-5 h-5 text-white" />
+          HD
         </button>
-        
-        {/* Quality options */}
-        {showQualityOptions && (
-          <div className="absolute top-10 right-0 bg-black/80 rounded-md overflow-hidden shadow-lg"
-               onClick={(e) => e.stopPropagation()}>
-            <button 
-              className={`block w-full px-4 py-2 text-center text-sm ${quality === 'HD' ? 'bg-[#FE2C55] text-white' : 'text-white hover:bg-black/60'}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                setQuality('HD');
-                setShowQualityOptions(false);
-              }}
-            >
-              HD
-            </button>
-            <button 
-              className={`block w-full px-4 py-2 text-center text-sm ${quality === 'LOW' ? 'bg-[#FE2C55] text-white' : 'text-white hover:bg-black/60'}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                setQuality('LOW');
-                setShowQualityOptions(false);
-              }}
-            >
-              LOW
-            </button>
-          </div>
-        )}
+        <button 
+          className={`px-3 py-1 rounded-full text-xs font-medium ${quality === 'LOW' ? 'bg-[#FE2C55] text-white' : 'bg-black/50 text-white'}`}
+          onClick={() => setQuality('LOW')}
+        >
+          LOW
+        </button>
       </div>
     </div>
   );
